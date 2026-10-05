@@ -11,152 +11,205 @@
   <link rel="apple-touch-icon" href="assets/pal-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ------------------------------------------------------------
+       PAL design tokens. The paper template (main.tex) uses the
+       same palette, rules and rail layout, so keep the two in step.
+       ------------------------------------------------------------ */
     :root {
-      --bg: #FAFAFA; --fg: #0A0A0A; --fg-muted: #0A0A0Aaa; --border: #0A0A0A22;
-      --blue: #013ECD; --navy: #000E2F; --green: #5BA33B;
-      --contour: #0A0A0A; --contour-op: 0.14; --svg-glow: none;
+      --bg: #FAFAFA;
+      --ink: #0A0A0A;           /* headings, strong rules */
+      --text: #262626;          /* body copy, 14.6:1 on --bg */
+      --muted: #555555;         /* secondary copy, 7.2:1 */
+      --faint: #6E6E6E;         /* meta labels, 4.9:1 */
+      --rule: #E1E1E1;          /* hairlines */
+      --blue: #013ECD;
+      --sky: #76A0F2;
+      --navy: #000E2F;
+      --green: #3B7A22;         /* PAL green, darkened for text contrast */
+      --display: 'Space Grotesk', system-ui, sans-serif;
+      --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --wrap: 80rem;
+      --gutter: clamp(1.25rem, 4vw, 3.5rem);
+      --rail: 13rem;
+      --measure: 68ch;
     }
 
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.6; font-weight: 300; font-size: 16px; position: relative; }
-    body::before { content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 256px 256px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 4.5rem; -webkit-text-size-adjust: 100%; }
+    body { font-family: var(--sans); font-size: 1.0625rem; line-height: 1.65; font-weight: 400; color: var(--text); background: var(--bg); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+    body::before { content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 256px 256px; }
+    img { display: block; max-width: 100%; height: auto; }
     a { color: inherit; text-decoration: none; }
-    h1,h2,h3,.section-num,.nav-logo,.footer-label { font-family: 'Space Grotesk', system-ui, sans-serif; }
+    :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+    .skip { position: absolute; left: -999px; top: 0; z-index: 100; background: var(--ink); color: var(--bg); padding: 0.5rem 1rem; font-family: var(--display); font-size: 0.8125rem; }
+    .skip:focus { left: 1rem; top: 1rem; }
 
-    .edge-text { position: fixed; z-index: 40; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 0.625rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); opacity: 0.35; writing-mode: vertical-rl; }
-    .edge-left { left: 1rem; top: 50%; transform: translateY(-50%) rotate(180deg); }
-    .edge-right { right: 1rem; top: 50%; transform: translateY(-50%); }
+    .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); }
 
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; border-bottom: 1px solid var(--border); background: var(--bg); }
-    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 0 3.5rem; height: 3.5rem; }
-    .nav-logo { display: inline-flex; align-items: center; gap: 0.625rem; font-size: 0.875rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; }
-    .nav-logo-mark { width: 1.75rem; height: 1.75rem; display: block; flex: 0 0 auto; }
-    .nav-links { display: flex; align-items: center; gap: 2rem; }
-    .nav-links a { font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); transition: color 0.2s; }
-    .nav-links a:hover { color: var(--blue); }
+    /* Small tracked uppercase label: nav, rail, badges, captions, roles. */
+    .label { font-family: var(--display); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.4; }
 
-    .menu-btn { display: none; background: none; border: none; cursor: pointer; color: var(--fg-muted); padding: 0.375rem; }
-    .mobile-menu { display: none; flex-direction: column; gap: 0.25rem; padding: 1rem 3.5rem; border-top: 1px solid var(--border); background: var(--bg); }
-    .mobile-menu a { font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); padding: 0.5rem 0; }
-    .mobile-menu a:hover { color: var(--blue); }
-    @media (max-width: 768px) {
-      .nav-inner { padding: 0 1.5rem; }
-      .mobile-menu { padding: 1rem 1.5rem; }
-      .nav-links a:not(.menu-btn) { display: none; }
-      .nav-links { gap: 0.5rem; }
+    .edge-text { position: fixed; z-index: 40; left: 1rem; top: 50%; transform: translateY(-50%) rotate(180deg); writing-mode: vertical-rl; font-family: var(--display); font-size: 0.625rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); opacity: 0.35; pointer-events: none; }
+    @media (max-width: 1100px) { .edge-text { display: none; } }
+
+    /* ---------------- nav ---------------- */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(250,250,250,0.94); backdrop-filter: saturate(1.4) blur(8px); -webkit-backdrop-filter: saturate(1.4) blur(8px); border-bottom: 1px solid var(--rule); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 3.5rem; }
+    .nav-logo { display: inline-flex; align-items: center; gap: 0.625rem; font-family: var(--display); font-size: 0.875rem; font-weight: 700; letter-spacing: 0.15em; color: var(--ink); }
+    .nav-logo img { width: 1.75rem; height: 1.75rem; }
+    .nav-logo .sub { font-weight: 500; letter-spacing: 0.12em; font-size: 0.6875rem; color: var(--faint); padding-left: 0.625rem; border-left: 1px solid var(--rule); text-transform: uppercase; }
+    .nav-links { display: flex; align-items: center; gap: 1.75rem; }
+    .nav-links a { font-family: var(--display); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0.25rem 0; border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
+    .nav-links a:hover, .nav-links a[aria-current="true"] { color: var(--blue); border-bottom-color: var(--blue); }
+    .menu-btn { display: none; background: none; border: 1px solid var(--rule); cursor: pointer; color: var(--ink); padding: 0.375rem; }
+    .mobile-menu { display: none; flex-direction: column; border-top: 1px solid var(--rule); background: var(--bg); padding: 0.5rem var(--gutter) 1rem; }
+    .mobile-menu a { font-family: var(--display); font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0.75rem 0; border-bottom: 1px solid var(--rule); }
+    .mobile-menu a:last-child { border-bottom: 0; }
+    @media (max-width: 860px) {
+      .nav-links a { display: none; }
       .menu-btn { display: flex; }
       .mobile-menu.open { display: flex; }
-      .edge-text { display: none; }
+      .nav-logo .sub { display: none; }
     }
-    .poster { margin: 3.5rem 0 0 0; padding: 0 3.5rem; }
-    @media (max-width: 768px) { .poster { padding: 0 1.5rem; } }
 
-    .section-num { font-size: clamp(3rem, 8vw, 5rem); font-weight: 700; line-height: 1; color: var(--blue); opacity: 0.15; letter-spacing: -0.03em; margin-bottom: 1.5rem; user-select: none; }
-    .section-title { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 1rem; }
-    .cell { border-top: 1px solid var(--border); padding: 2rem 0; }
-
-    .hero-section { border-top: 1px solid var(--border); padding: 3rem 0 2rem 0; position: relative; overflow: hidden; }
-    .hero-title { font-family: 'Space Grotesk', system-ui, sans-serif; font-size: clamp(3rem, 10vw, 7rem); font-weight: 700; text-transform: uppercase; letter-spacing: -0.04em; line-height: 0.92; margin-bottom: 1.5rem; position: relative; z-index: 1; }
-    .hero-subtitle { font-size: clamp(1rem, 2vw, 1.375rem); font-weight: 300; color: var(--fg-muted); max-width: 75rem; line-height: 1.6; position: relative; z-index: 1; }
-    .hero-mission { margin-top: 1.5rem; font-size: 1rem; font-weight: 300; color: var(--fg-muted); line-height: 1.7; max-width: 65rem; position: relative; z-index: 1; }
-    .hero-topo { position: absolute; right: -2rem; top: 50%; transform: translateY(-50%); width: clamp(280px, 35vw, 480px); height: clamp(280px, 35vw, 480px); pointer-events: none; filter: var(--svg-glow); }
+    /* ---------------- hero ---------------- */
+    .hero { position: relative; overflow: hidden; padding: calc(3.5rem + clamp(3rem, 8vw, 6rem)) 0 clamp(3rem, 6vw, 4.5rem); }
+    .hero-kicker { color: var(--blue); margin-bottom: 1.5rem; }
+    .hero-title { font-family: var(--display); font-size: clamp(3.25rem, 10vw, 7.5rem); font-weight: 700; text-transform: uppercase; letter-spacing: -0.04em; line-height: 0.9; color: var(--ink); margin-bottom: 2rem; position: relative; z-index: 1; }
+    .hero-subtitle { font-family: var(--display); font-size: clamp(1.25rem, 2.4vw, 1.75rem); font-weight: 500; line-height: 1.3; letter-spacing: -0.01em; color: var(--ink); max-width: 30ch; position: relative; z-index: 1; }
+    .hero-mission { margin-top: 1.25rem; color: var(--muted); max-width: 60ch; position: relative; z-index: 1; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; position: relative; z-index: 1; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--display); font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.75rem 1.125rem; border: 1px solid var(--ink); color: var(--ink); transition: background .2s, color .2s, border-color .2s; }
+    .btn:hover { background: var(--ink); color: var(--bg); }
+    .btn-primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .btn-primary:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .hero-topo { position: absolute; right: -4rem; top: 50%; transform: translateY(-46%); width: clamp(300px, 40vw, 560px); aspect-ratio: 1; pointer-events: none; }
     .hero-topo svg { width: 100%; height: 100%; }
-    .hero-sphere { position: absolute; right: 8%; top: 12%; width: 60px; height: 60px; pointer-events: none; }
-    .hero-sphere circle { fill: var(--blue); mix-blend-mode: multiply; }
-    @media (max-width: 768px) { .hero-topo, .hero-sphere { display: none; } }
+    .blend-blue { mix-blend-mode: multiply; }
+    @media (max-width: 900px) { .hero-topo { opacity: 0.45; right: -40%; } }
 
-    .focus-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
-    .focus-cell { border-top: 1px solid var(--border); border-right: 1px solid var(--border); padding: 2rem; }
-    .focus-cell:last-child { border-right: none; }
-    .focus-num { font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 0.75rem; font-weight: 600; color: var(--blue); letter-spacing: 0.05em; margin-bottom: 1rem; }
-    .focus-title { font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
-    .focus-body { font-size: 0.875rem; font-weight: 300; color: var(--fg-muted); line-height: 1.7; }
-    .focus-icon { margin-bottom: 1rem; }
-    .focus-icon svg { width: 40px; height: 40px; }
-    @media (max-width: 768px) { .focus-grid { grid-template-columns: 1fr; } .focus-cell { border-right: none; } }
-
-    .deco-divider { border-top: 1px solid var(--border); padding: 0.75rem 0; overflow: hidden; }
+    .deco-divider { overflow: hidden; }
     .deco-divider svg { width: 100%; height: 24px; display: block; }
 
-    .projects-grid { display: grid; grid-template-columns: 1fr 1fr; }
-    .project-cell { border-top: 1px solid var(--border); border-right: 1px solid var(--border); padding: 2rem; }
-    .project-cell:last-child { border-right: none; }
-    .project-badge { display: inline-block; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 0.625rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; padding: 0.25rem 0.625rem; border: 1px solid; margin-bottom: 1rem; }
-    .badge-blue { color: var(--blue); border-color: var(--blue); }
-    .badge-green { color: var(--blue); border-color: var(--blue); }
-    .project-cell h3 { font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 1.125rem; font-weight: 700; line-height: 1.3; margin-bottom: 1rem; }
-    .project-cell p { font-size: 0.875rem; font-weight: 300; color: var(--fg-muted); line-height: 1.7; margin-bottom: 1rem; }
-    .tags { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 1rem; }
-    .tag { font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 0.625rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.2rem 0.5rem; border: 1px solid var(--border); color: var(--fg-muted); }
-    .figures { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; border-top: 1px solid var(--border); padding: 2rem 0; max-width: 85%; margin: 0 auto; }
-    .figure-item { margin: 0; border: 1px solid var(--border); padding: 0; }
-    .figure-img { width: 100%; overflow: hidden; border-bottom: 1px solid var(--border); }
-    .figure-img img { width: 100%; height: auto; display: block; }
-    .figure-item figcaption { padding: 1rem 2rem; font-size: 0.8125rem; font-weight: 300; color: var(--fg-muted); line-height: 1.5; }
-    .figure-item figcaption span { font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 0.625rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg); margin-right: 0.5rem; }
-    @media (max-width: 768px) { .figures { grid-template-columns: 1fr; max-width: 100%; } }
-    .ext-link { display: inline-flex; align-items: center; gap: 0.375rem; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 0.75rem; font-weight: 500; color: var(--blue); letter-spacing: 0.05em; }
-    .ext-link:hover { text-decoration: underline; }
-    @media (max-width: 768px) { .projects-grid { grid-template-columns: 1fr; } .project-cell { border-right: none; } }
+    /* ---------------- sections: rail + content ---------------- */
+    .section { display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); column-gap: 2.5rem; border-top: 1px solid var(--ink); padding: 2.25rem 0 clamp(3.5rem, 7vw, 5.5rem); }
+    .rail { align-self: start; position: sticky; top: 5.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
+    .rail-num { font-family: var(--display); font-size: 2.75rem; font-weight: 700; line-height: 1; letter-spacing: -0.03em; color: var(--blue); opacity: 0.22; }
+    .rail-label { color: var(--blue); }
+    .section-title { font-family: var(--display); font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.02; color: var(--ink); margin-bottom: 1rem; }
+    .lede { color: var(--muted); max-width: var(--measure); font-size: 1.125rem; margin-bottom: 2.5rem; }
+    .prose { max-width: var(--measure); }
+    .prose p + p { margin-top: 1rem; }
+    @media (max-width: 860px) {
+      .section { grid-template-columns: 1fr; padding-top: 1.5rem; }
+      .rail { position: static; flex-direction: row; align-items: baseline; gap: 0.75rem; margin-bottom: 1.25rem; }
+      .rail-num { font-size: 1.5rem; opacity: 0.35; }
+    }
 
-    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--border); }
-    .team-cell { border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); padding: 2rem; position: relative; overflow: hidden; }
-    .team-cell:nth-child(3n) { border-right: none; }
-    .team-cell::before { content: ''; position: absolute; right: -20px; bottom: -20px; width: 120px; height: 120px; border-radius: 50%; background: repeating-radial-gradient(circle, transparent 0, transparent 8px, var(--contour) 8px, var(--contour) 9px); opacity: var(--contour-op); pointer-events: none; }
-    .avatar { width: 3rem; height: 3rem; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 0.75rem; font-weight: 600; color: var(--fg-muted); margin-bottom: 1rem; position: relative; overflow: hidden; }
-    .avatar::before { content: ''; position: absolute; inset: 0; opacity: 0.12; background-image: radial-gradient(var(--fg) 1px, transparent 1px); background-size: 6px 6px; }
-    .avatar span { position: relative; }
-    .avatar img { width: 100%; height: 100%; object-fit: cover; position: relative; }
-    .member-name { font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 0.9375rem; font-weight: 700; margin-bottom: 0.125rem; }
-    .member-role { font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 0.6875rem; font-weight: 500; color: var(--blue); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
-    .member-bio { font-size: 0.8125rem; font-weight: 300; color: var(--fg-muted); line-height: 1.65; position: relative; }
-    @media (max-width: 1024px) { .team-grid { grid-template-columns: repeat(2, 1fr); } .team-cell:nth-child(3n) { border-right: 1px solid var(--border); } .team-cell:nth-child(2n) { border-right: none; } }
-    @media (max-width: 640px) { .team-grid { grid-template-columns: 1fr; } .team-cell { border-right: none !important; } }
+    /* The cell: hairline on top, then number/label, title, body.
+       Used for focus areas, projects and team members alike. */
+    .cells { display: grid; column-gap: 2.5rem; }
+    .cells-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cells-team { grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr)); }
+    .cell { border-top: 1px solid var(--rule); padding: 1.5rem 0 2.25rem; }
+    .cell-num { color: var(--blue); margin-bottom: 0.875rem; display: flex; align-items: center; gap: 0.75rem; }
+    .cell-title { font-family: var(--display); font-size: 1.125rem; font-weight: 700; line-height: 1.3; color: var(--ink); margin-bottom: 0.625rem; }
+    .cell-body { font-size: 0.96875rem; line-height: 1.65; color: var(--muted); }
+    @media (max-width: 960px) { .cells-3 { grid-template-columns: 1fr; } }
 
-    .partner-section { border-top: 1px solid var(--border); padding: 2rem 0; display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
-    .partner-section h3 { font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem; }
-    .partner-section p { font-size: 0.875rem; font-weight: 300; color: var(--fg-muted); line-height: 1.7; margin-bottom: 1rem; }
-    .partner-links { display: flex; flex-wrap: wrap; gap: 1.5rem; }
-    .partner-links a { font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 0.75rem; font-weight: 500; color: var(--blue); letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 0.375rem; }
-    .partner-links a:hover { text-decoration: underline; }
-    @media (max-width: 768px) { .partner-section { grid-template-columns: 1fr; } }
+    .focus-icon { width: 40px; height: 40px; }
 
-    .ack-section { border-top: 1px solid var(--border); padding: 2rem 0; }
-    .ack-section p { font-size: 0.875rem; font-weight: 300; color: var(--fg-muted); line-height: 1.7; max-width: 60rem; }
+    /* ---------------- projects ---------------- */
+    .figures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+    .figure-item { border: 1px solid var(--rule); background: #fff; }
+    .figure-item img { width: 100%; border-bottom: 1px solid var(--rule); }
+    .figure-item figcaption { padding: 0.875rem 1.125rem 1rem; font-size: 0.875rem; line-height: 1.55; color: var(--muted); }
+    .figure-item figcaption .label { color: var(--ink); margin-right: 0.5rem; font-size: 0.6875rem; }
+    @media (max-width: 760px) { .figures { grid-template-columns: 1fr; } }
 
-    footer { border-top: 1px solid var(--border); padding: 0 3.5rem; }
-    .footer-bottom { padding: 1rem 0; display: flex; align-items: center; justify-content: space-between; font-size: 0.6875rem; color: var(--fg-muted); letter-spacing: 0.05em; }
-    @media (max-width: 768px) { footer { padding: 0 1.5rem; } }
-    .icon-external { width: 0.75rem; height: 0.75rem; }
-    .blend-blue { mix-blend-mode: multiply; }
+    .project { display: grid; grid-template-columns: minmax(0, 1fr); border-top: 1px solid var(--rule); padding: 1.75rem 0 2.5rem; }
+    .project-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .badge { display: inline-block; font-family: var(--display); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.25rem 0.625rem; border: 1px solid currentColor; line-height: 1.4; }
+    .badge-progress { color: var(--blue); }
+    .badge-pilot { color: var(--green); }
+    .project h3 { font-family: var(--display); font-size: clamp(1.375rem, 2.4vw, 1.75rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; color: var(--ink); max-width: 34ch; margin-bottom: 1rem; }
+    .project p { max-width: var(--measure); }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 1.25rem; }
+    .tag { font-family: var(--display); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.5rem; border: 1px solid var(--rule); color: var(--muted); }
+    .links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; margin-top: 1.25rem; }
+    .ext-link { display: inline-flex; align-items: center; gap: 0.375rem; font-family: var(--display); font-size: 0.875rem; font-weight: 600; letter-spacing: 0.02em; color: var(--blue); border-bottom: 1px solid rgba(1,62,205,0.3); padding-bottom: 1px; transition: border-color .2s; }
+    .ext-link:hover { border-bottom-color: var(--blue); }
+    .icon-external { width: 0.75rem; height: 0.75rem; flex: none; }
+
+    /* ---------------- team ---------------- */
+    .member { position: relative; overflow: hidden; }
+    .member::after { content: ''; position: absolute; right: -28px; bottom: -28px; width: 120px; height: 120px; border-radius: 50%; background: repeating-radial-gradient(circle, transparent 0, transparent 8px, var(--ink) 8px, var(--ink) 9px); opacity: 0.06; pointer-events: none; }
+    .member-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    .avatar { width: 4rem; height: 4rem; flex: none; border-radius: 50%; overflow: hidden; border: 1px solid var(--rule); background: #EEF2FB; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
+    .member-name { font-family: var(--display); font-size: 1.0625rem; font-weight: 700; line-height: 1.25; color: var(--ink); }
+    .member-name a { border-bottom: 1px solid var(--rule); transition: border-color .2s, color .2s; }
+    .member-name a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+    .member-role { color: var(--blue); margin-top: 0.25rem; font-size: 0.6875rem; }
+    .member-org { font-size: 0.8125rem; color: var(--faint); line-height: 1.4; margin-top: 0.125rem; }
+    .cells-team { align-items: start; }
+    .member { padding-bottom: 1.5rem; }
+    .member .cell-body { position: relative; z-index: 1; padding-top: 0.75rem; }
+    .bio summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; color: var(--blue); padding: 0.375rem 0; position: relative; z-index: 1; }
+    .bio summary::-webkit-details-marker { display: none; }
+    .bio summary::after { content: ''; width: 0.625rem; height: 0.625rem; background: linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat, linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat; transition: transform .2s; }
+    .bio[open] summary::after { transform: rotate(45deg); }
+    .bio summary:hover .label { text-decoration: underline; text-underline-offset: 3px; }
+    .bio .when-open, .bio[open] .when-closed { display: none; }
+    .bio[open] .when-open { display: inline; }
+
+    /* ---------------- partner, acknowledgements ---------------- */
+    .partner { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 2.5rem; border-top: 1px solid var(--rule); padding-top: 1.75rem; }
+    .partner h3 { font-family: var(--display); font-size: 1.375rem; font-weight: 700; color: var(--ink); line-height: 1.2; }
+    .partner svg { margin-top: 1.25rem; }
+    @media (max-width: 760px) { .partner { grid-template-columns: 1fr; gap: 1rem; } .partner svg { display: none; } }
+
+    /* ---------------- footer ---------------- */
+    footer { border-top: 1px solid var(--ink); }
+    .footer-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem 3rem; align-items: end; padding: 2.5rem 0 2rem; }
+    .footer-brand { display: flex; align-items: center; gap: 0.875rem; }
+    .footer-brand img { width: 2.5rem; height: 2.5rem; }
+    .footer-brand strong { display: block; font-family: var(--display); font-weight: 700; letter-spacing: 0.15em; color: var(--ink); font-size: 0.9375rem; }
+    .footer-brand span { display: block; font-size: 0.875rem; color: var(--muted); }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; }
+    .footer-bottom { border-top: 1px solid var(--rule); padding: 1rem 0 1.5rem; font-size: 0.8125rem; color: var(--faint); }
+    @media (max-width: 760px) { .footer-inner { grid-template-columns: 1fr; } }
+
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
   </style>
 </head>
 <body>
 
-<div class="edge-text edge-left">Pluralistic AI Lab</div>
+<a class="skip" href="#main">Skip to content</a>
+<div class="edge-text" aria-hidden="true">Pluralistic AI Lab</div>
 
-<nav>
-  <div class="nav-inner">
-    <a href="#" class="nav-logo" aria-label="Pluralistic AI Lab home">
-      <img src="assets/pal-mark.svg" class="nav-logo-mark" alt="" width="28" height="28" />
+<nav aria-label="Primary">
+  <div class="wrap nav-inner">
+    <a href="#top" class="nav-logo" aria-label="Pluralistic AI Lab home">
+      <img src="assets/pal-mark.svg" alt="" width="28" height="28" />
       <span>PAL</span>
+      <span class="sub">Pluralistic AI Lab</span>
     </a>
     <div class="nav-links">
-      <a href="#about">About</a>
+      <a href="#research">Research</a>
       <a href="#projects">Projects</a>
       <a href="#team">Team</a>
       <a href="#partners">Partners</a>
       <a href="#acknowledgements">Acknowledgements</a>
-      <button class="menu-btn" onclick="toggleMenu()" aria-label="Toggle menu">
+      <button class="menu-btn" onclick="toggleMenu()" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
     </div>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#about" onclick="closeMenu()">About</a>
+    <a href="#research" onclick="closeMenu()">Research</a>
     <a href="#projects" onclick="closeMenu()">Projects</a>
     <a href="#team" onclick="closeMenu()">Team</a>
     <a href="#partners" onclick="closeMenu()">Partners</a>
@@ -164,274 +217,382 @@
   </div>
 </nav>
 
-<div class="poster">
+<main id="main">
+<div class="wrap">
 
-  <section class="hero-section" id="about">
-    <div class="section-num">01</div>
+  <header class="hero" id="top">
+    <p class="label hero-kicker">Collaborative research initiative</p>
     <h1 class="hero-title">Pluralistic<br/>AI Lab</h1>
     <p class="hero-subtitle">Reimagining AI interfaces beyond the monolithic chatbot.</p>
     <p class="hero-mission">The PAL (Pluralistic AI Lab) is a collaborative research initiative led by a cross-disciplinary team of artists, designers, technologists, researchers and grassroot organization leaders. The lab&rsquo;s mission focuses on reimagining AI interfaces and architectures to move beyond &ldquo;monolithic&rdquo; single-person chatbots.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#projects">See our projects</a>
+      <a class="btn" href="https://huggingface.co/spaces/LLM-Plurality/chat" target="_blank" rel="noopener noreferrer">Try the prototype
+        <svg class="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+    </div>
     <!-- Topographic contour art -->
     <div class="hero-topo" id="heroTopo" aria-hidden="true">
       <svg viewBox="0 0 400 400" fill="none">
-        <circle cx="200" cy="200" r="90" fill="var(--blue)" opacity="0.12" class="blend-blue"/>
-        <circle cx="200" cy="200" r="60" fill="var(--blue)" opacity="0.08" class="blend-blue"/>
-        <circle cx="200" cy="200" r="30" stroke="var(--contour)" stroke-width="0.5" opacity="var(--contour-op)"/>
-        <circle cx="200" cy="200" r="50" stroke="var(--contour)" stroke-width="0.5" opacity="var(--contour-op)" stroke-dasharray="4 3"/>
-        <circle cx="200" cy="200" r="70" stroke="var(--contour)" stroke-width="0.5" opacity="var(--contour-op)"/>
-        <circle cx="200" cy="200" r="90" stroke="var(--contour)" stroke-width="0.7" opacity="var(--contour-op)" stroke-dasharray="8 4"/>
-        <circle cx="200" cy="200" r="110" stroke="var(--contour)" stroke-width="0.5" opacity="var(--contour-op)"/>
-        <circle cx="200" cy="200" r="130" stroke="var(--contour)" stroke-width="0.5" opacity="var(--contour-op)" stroke-dasharray="2 4"/>
-        <circle cx="200" cy="200" r="150" stroke="var(--contour)" stroke-width="0.5" opacity="var(--contour-op)"/>
-        <circle cx="200" cy="200" r="170" stroke="var(--contour)" stroke-width="0.7" opacity="var(--contour-op)" stroke-dasharray="12 6"/>
-        <circle cx="200" cy="200" r="190" stroke="var(--contour)" stroke-width="0.5" opacity="var(--contour-op)"/>
-        <ellipse cx="210" cy="190" rx="45" ry="55" stroke="var(--contour)" stroke-width="0.5" opacity="var(--contour-op)" stroke-dasharray="3 5"/>
-        <ellipse cx="195" cy="210" rx="75" ry="65" stroke="var(--contour)" stroke-width="0.5" opacity="var(--contour-op)"/>
-        <ellipse cx="205" cy="195" rx="105" ry="95" stroke="var(--contour)" stroke-width="0.5" opacity="var(--contour-op)" stroke-dasharray="6 3"/>
-        <ellipse cx="190" cy="205" rx="135" ry="125" stroke="var(--contour)" stroke-width="0.5" opacity="var(--contour-op)"/>
+        <circle cx="200" cy="200" r="90" fill="#013ECD" opacity="0.12" class="blend-blue"/>
+        <circle cx="200" cy="200" r="60" fill="#013ECD" opacity="0.08" class="blend-blue"/>
+        <circle cx="292" cy="96" r="22" fill="#013ECD" opacity="0.18" class="blend-blue"/>
+        <g stroke="#0A0A0A" opacity="0.14">
+          <circle cx="200" cy="200" r="30" stroke-width="0.5"/>
+          <circle cx="200" cy="200" r="50" stroke-width="0.5" stroke-dasharray="4 3"/>
+          <circle cx="200" cy="200" r="70" stroke-width="0.5"/>
+          <circle cx="200" cy="200" r="90" stroke-width="0.7" stroke-dasharray="8 4"/>
+          <circle cx="200" cy="200" r="110" stroke-width="0.5"/>
+          <circle cx="200" cy="200" r="130" stroke-width="0.5" stroke-dasharray="2 4"/>
+          <circle cx="200" cy="200" r="150" stroke-width="0.5"/>
+          <circle cx="200" cy="200" r="170" stroke-width="0.7" stroke-dasharray="12 6"/>
+          <circle cx="200" cy="200" r="190" stroke-width="0.5"/>
+          <ellipse cx="210" cy="190" rx="45" ry="55" stroke-width="0.5" stroke-dasharray="3 5"/>
+          <ellipse cx="195" cy="210" rx="75" ry="65" stroke-width="0.5"/>
+          <ellipse cx="205" cy="195" rx="105" ry="95" stroke-width="0.5" stroke-dasharray="6 3"/>
+          <ellipse cx="190" cy="205" rx="135" ry="125" stroke-width="0.5"/>
+        </g>
       </svg>
     </div>
-    <svg class="hero-sphere" viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="28" opacity="0.2"/></svg>
+  </header>
+
+  <div class="deco-divider" aria-hidden="true">
+    <svg viewBox="0 0 1200 24" preserveAspectRatio="none" fill="none">
+      <path d="M0 12 Q50 4 100 12 T200 12 T300 12 T400 12 T500 12 T600 12 T700 12 T800 12 T900 12 T1000 12 T1100 12 T1200 12" stroke="#013ECD" stroke-width="0.5" opacity="0.18"/>
+      <path d="M0 12 Q50 20 100 12 T200 12 T300 12 T400 12 T500 12 T600 12 T700 12 T800 12 T900 12 T1000 12 T1100 12 T1200 12" stroke="#013ECD" stroke-width="0.5" opacity="0.12"/>
+    </svg>
+  </div>
+
+  <!-- 01 ======================================================= -->
+  <section class="section" id="research" aria-labelledby="research-title">
+    <div class="rail"><span class="rail-num" aria-hidden="true">01</span><span class="label rail-label">Research</span></div>
+    <div>
+      <h2 class="section-title" id="research-title">What we work on</h2>
+      <div class="cells cells-3">
+        <article class="cell">
+          <div class="label cell-num">
+            <svg class="focus-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+              <circle cx="15" cy="20" r="10" stroke="#013ECD" stroke-width="0.9" opacity="0.6"/>
+              <circle cx="25" cy="20" r="10" stroke="#013ECD" stroke-width="0.9" opacity="0.6" stroke-dasharray="3 2"/>
+              <circle cx="20" cy="12" r="10" stroke="#013ECD" stroke-width="0.9" opacity="0.6" stroke-dasharray="1 2"/>
+            </svg>1.1
+          </div>
+          <h3 class="cell-title">Developing Pluralistic AI</h3>
+          <p class="cell-body">Researching multi-persona and multi-agent systems that present users with diverse, even conflicting, perspectives to reorient AI interactions from single, authoritative, or &ldquo;polite&rdquo; consensus to preserving &ldquo;honest friction.&rdquo;</p>
+        </article>
+        <article class="cell">
+          <div class="label cell-num">
+            <svg class="focus-icon" viewBox="0 0 40 40" fill="none" stroke="#013ECD" stroke-width="0.9" opacity="0.6" aria-hidden="true">
+              <circle cx="20" cy="6" r="3"/><circle cx="10" cy="20" r="3"/><circle cx="30" cy="20" r="3"/>
+              <circle cx="5" cy="34" r="3"/><circle cx="15" cy="34" r="3"/><circle cx="25" cy="34" r="3"/><circle cx="35" cy="34" r="3"/>
+              <line x1="20" y1="9" x2="10" y2="17"/><line x1="20" y1="9" x2="30" y2="17"/>
+              <line x1="10" y1="23" x2="5" y2="31"/><line x1="10" y1="23" x2="15" y2="31"/>
+              <line x1="30" y1="23" x2="25" y2="31"/><line x1="30" y1="23" x2="35" y2="31"/>
+            </svg>1.2
+          </div>
+          <h3 class="cell-title">Democratizing Deliberation</h3>
+          <p class="cell-body">Creating culturally calibrated AI agents that enable marginalized communities to participate in policy simulations and democratic deliberation rooted in their lived experiences.</p>
+        </article>
+        <article class="cell">
+          <div class="label cell-num">
+            <svg class="focus-icon" viewBox="0 0 40 40" fill="none" stroke="#013ECD" stroke-width="0.9" opacity="0.6" aria-hidden="true">
+              <line x1="2" y1="4" x2="20" y2="36"/><line x1="10" y1="2" x2="20" y2="36"/>
+              <line x1="20" y1="2" x2="20" y2="36"/><line x1="30" y1="2" x2="20" y2="36"/>
+              <line x1="38" y1="4" x2="20" y2="36"/>
+              <circle cx="20" cy="36" r="2" fill="#013ECD" opacity="0.4"/>
+            </svg>1.3
+          </div>
+          <h3 class="cell-title">Addressing AI Harms</h3>
+          <p class="cell-body">Combating the &ldquo;three faces of harm&rdquo; in standard chatbot designs: cognitive offloading (erosion of critical thinking), ideological narrowing (manufactured consensus and bias), and epistemic compression (reduction of cultural and value diversity).</p>
+        </article>
+      </div>
+    </div>
   </section>
 
-  <div class="focus-grid">
-    <div class="focus-cell">
-      <div class="focus-icon" aria-hidden="true">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-          <circle cx="15" cy="20" r="10" stroke="var(--blue)" stroke-width="0.8" opacity="0.5"/>
-          <circle cx="25" cy="20" r="10" stroke="var(--blue)" stroke-width="0.8" opacity="0.5" stroke-dasharray="3 2"/>
-          <circle cx="20" cy="12" r="10" stroke="var(--blue)" stroke-width="0.8" opacity="0.5" stroke-dasharray="1 2"/>
-        </svg>
-      </div>
-      <div class="focus-num">01</div>
-      <div class="focus-title">Developing Pluralistic AI</div>
-      <div class="focus-body">Researching multi-persona and multi-agent systems that present users with diverse, even conflicting, perspectives to reorient AI interactions from single, authoritative, or &ldquo;polite&rdquo; consensus to preserving &ldquo;honest friction.&rdquo;</div>
-    </div>
-    <div class="focus-cell">
-      <div class="focus-icon" aria-hidden="true">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="var(--blue)" stroke-width="0.8" opacity="0.5">
-          <circle cx="20" cy="6" r="3"/><circle cx="10" cy="20" r="3"/><circle cx="30" cy="20" r="3"/>
-          <circle cx="5" cy="34" r="3"/><circle cx="15" cy="34" r="3"/><circle cx="25" cy="34" r="3"/><circle cx="35" cy="34" r="3"/>
-          <line x1="20" y1="9" x2="10" y2="17"/><line x1="20" y1="9" x2="30" y2="17"/>
-          <line x1="10" y1="23" x2="5" y2="31"/><line x1="10" y1="23" x2="15" y2="31"/>
-          <line x1="30" y1="23" x2="25" y2="31"/><line x1="30" y1="23" x2="35" y2="31"/>
-        </svg>
-      </div>
-      <div class="focus-num">02</div>
-      <div class="focus-title">Democratizing Deliberation</div>
-      <div class="focus-body">Creating culturally calibrated AI agents that enable marginalized communities to participate in policy simulations and democratic deliberation rooted in their lived experiences.</div>
-    </div>
-    <div class="focus-cell">
-      <div class="focus-icon" aria-hidden="true">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="var(--blue)" stroke-width="0.8" opacity="0.5">
-          <line x1="2" y1="4" x2="20" y2="36"/><line x1="10" y1="2" x2="20" y2="36"/>
-          <line x1="20" y1="2" x2="20" y2="36"/><line x1="30" y1="2" x2="20" y2="36"/>
-          <line x1="38" y1="4" x2="20" y2="36"/>
-          <circle cx="20" cy="36" r="2" fill="var(--blue)" opacity="0.3"/>
-        </svg>
-      </div>
-      <div class="focus-num">03</div>
-      <div class="focus-title">Addressing AI Harms</div>
-      <div class="focus-body">Combating the &ldquo;three faces of harm&rdquo; in standard chatbot designs: cognitive offloading (erosion of critical thinking), ideological narrowing (manufactured consensus and bias), and epistemic compression (reduction of cultural and value diversity).</div>
-    </div>
-  </div>
-
-  <div class="deco-divider" aria-hidden="true">
-    <svg viewBox="0 0 1200 24" preserveAspectRatio="none" fill="none">
-      <path d="M0 12 Q50 4 100 12 T200 12 T300 12 T400 12 T500 12 T600 12 T700 12 T800 12 T900 12 T1000 12 T1100 12 T1200 12" stroke="var(--blue)" stroke-width="0.5" opacity="0.12"/>
-      <path d="M0 12 Q50 20 100 12 T200 12 T300 12 T400 12 T500 12 T600 12 T700 12 T800 12 T900 12 T1000 12 T1100 12 T1200 12" stroke="var(--blue)" stroke-width="0.5" opacity="0.08"/>
-    </svg>
-  </div>
-
-  <div class="cell" id="projects">
-    <div class="section-num">02</div>
-    <div class="section-title">Projects</div>
-    <p style="font-weight:300; color:var(--fg-muted); margin-bottom:0;">Our work spans theoretical frameworks, system design, and real-world pilots with underrepresented communities.</p>
-  </div>
-
-  <div class="figures">
-    <figure class="figure-item">
-      <div class="figure-img"><img src="assets/figure1.png" alt="New Persona customization interface" /></div>
-      <figcaption><span>Figure 1</span> New Persona customization</figcaption>
-    </figure>
-    <figure class="figure-item">
-      <div class="figure-img"><img src="assets/figure2.png" alt="Conversational tree diagram showing branching persona perspectives" /></div>
-      <figcaption><span>Figure 2</span> The conversational tree diagram allows users to trace and rewind the lineage of ideas between various personas, each embodying a distinct perspective.</figcaption>
-    </figure>
-  </div>
-
-  <div class="projects-grid">
-    <div class="project-cell">
-      <div class="project-badge badge-blue">In progress</div>
-      <h3>Beyond the Monolithic Interface: A Research Agenda for Plural Conversational AI</h3>
-      <p>The rapid convergence of artificial intelligence toward conversational chatbot interfaces has made a single interaction paradigm the dominant mode through which hundreds of millions of people engage with AI systems. This narrative review synthesizes research across cognitive science, political studies, AI alignment, game design, and human-computer interaction to identify three interrelated harms produced by the monolithic chatbot interface: cognitive offloading at the level of user thinking, ideological narrowing at the level of user belief, and epistemic compression at the level of cultural and value diversity. We propose multi-persona interfaces, in which multiple distinct personas are presented to the user simultaneously, as a structural intervention that addresses all three harms at once. We create a design taxonomy for multi-persona interfaces and call for a human-centered research agenda that closes the gap between technical pluralistic alignment methods and empirical studies of users interacting with pluralistic interfaces.</p>
-      <div class="tags">
-        <span class="tag">Cognitive Science</span>
-        <span class="tag">Political Studies</span>
-        <span class="tag">AI Alignment</span>
-        <span class="tag">Game Design</span>
-        <span class="tag">HCI</span>
-      </div>
-      <div style="margin-top:1rem;">
-        <a href="assets/PAL_OngoingPaper.pdf" target="_blank" rel="noopener noreferrer" class="ext-link">
-          Read ongoing work
-          <svg class="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </a>
-      </div>
-    </div>
-    <div class="project-cell">
-      <div class="project-badge badge-green">Pilot</div>
-      <h3>Co&middot;Agents: The Filipino Diaspora Pilot</h3>
-      <p>The Co&middot;Agents project&mdash;a collaboration between researchers at UConn and Tayo/FYLPRO&mdash;develops a multi-agent AI system for cross-cultural cooperation in democratic deliberation. By utilizing culturally calibrated AI agents, Co&middot;Agents enable underrepresented communities to run policy simulations at a fraction of the cost of traditional &ldquo;mini-publics.&rdquo; The project leverages Tayo&rsquo;s role as a trusted community information hub to ensure AI-driven governance is rooted in the lived experiences of the global Filipino diaspora, and implements the Kierans framework to measure &ldquo;honest friction&rdquo; and misalignment.</p>
-      <div style="margin-top:1rem;">
-        <a href="https://huggingface.co/spaces/LLM-Plurality/chat" target="_blank" rel="noopener noreferrer" class="ext-link">
-          Try the prototype
-          <svg class="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <div class="deco-divider" aria-hidden="true">
-    <svg viewBox="0 0 1200 24" preserveAspectRatio="none" fill="var(--contour)" opacity="0.05">
-      <pattern id="dots" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1"/></pattern>
-      <rect width="1200" height="24" fill="url(#dots)"/>
-    </svg>
-  </div>
-
-  <div class="cell" id="team">
-    <div class="section-num">03</div>
-    <div class="section-title">Team</div>
-    <p style="font-weight:300; color:var(--fg-muted); margin-bottom:0; max-width:50rem;">Researchers and technologists spanning AI, cognitive science, political theory, and engineering.</p>
-  </div>
-
-  <div class="team-grid">
-    <div class="team-cell">
-      <div class="avatar"><img src="assets/team/zhenzhen-qi.png" alt="Zhenzhen Qi" /></div>
-      <div class="member-name"><a href="https://www.zzyw.org/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--border);">Dr. Zhenzhen Qi</a></div>
-      <div class="member-role">Co-Founder &middot; Univerity of Connecticut</div>
-      <div class="member-bio">Artist, Designer, and Assistant Professor in the Department of Digital Media and Design at UConn. Researching software simulation as a mode of collective un-looping and re-making. Her computational art has been curated by the New Museum, Art Basel, Ars Electronica, and Electra, and she has spoken at ELO, CAA, New York Creative Tech Week, and ISCP.</div>
-    </div>
-    <div class="team-cell">
-      <div class="avatar"><img src="assets/team/avijit-ghosh.jpg" alt="Avijit Ghosh" /></div>
-      <div class="member-name"><a href="https://evijit.io/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--border);">Dr. Avijit Ghosh</a></div>
-      <div class="member-role">Co-Founder &middot; Univerity of Connecticut</div>
-      <div class="member-bio">Lead Technical AI Policy Researcher at Hugging Face and Research Affiliate at UConn. He leads the EvalEval Coalition, a multi-stakeholder initiative for rigor in AI evaluations. His work spans algorithmic bias, agent autonomy, and vulnerability disclosure, and has been covered in The New York Times, Forbes, The Guardian, and Wired. His research has shaped AI regulation including in New York City.</div>
-    </div>
-    <div class="team-cell">
-      <div class="avatar"><img src="assets/team/afifah-kashif.JPG" alt="Afifah Kashif" /></div>
-      <div class="member-name"><a href="https://afifahk.github.io/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--border);">Afifah Kashif</a></div>
-      <div class="member-role">Researcher &middot; University of Cambridge</div>
-      <div class="member-bio">MPhil candidate in Human-Inspired AI at the University of Cambridge, where she focuses on developing methods for evaluating and mitigating bias in LLM-powered social robots. She previously studied computer science and law at the University of Washington, founded a digital literacy program for marginalized learners, and has worked to bridge design, engineering and governance in robotics and AI. </div>
-    </div>
-    <div class="team-cell">
-      <div class="avatar"><img src="assets/team/isabelle-kohout.jpeg" alt="Isabelle Kohout" /></div>
-      <div class="member-name">Isabelle Kohout</div>
-      <div class="member-role">Researcher &middot; University of Cambridge</div>
-      <div class="member-bio">MPhil candidate in Human-Inspired AI at the University of Cambridge. Previously a Senior Product Manager at Atlassian building AI systems used by hundreds of thousands globally, and co-leading their responsible AI governance program. Her research investigates how AI shapes individual beliefs and how those beliefs transmit to naive third parties, with implications for epistemic autonomy and democratic resilience.</div>
-    </div>
-    <div class="team-cell">
-      <div class="avatar"><img src="assets/team/sourojit-ghosh.png" alt="Sourojit Ghosh" /></div>
-      <div class="member-name"><a href="https://sourojitghosh.github.io/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--border);">Dr. Sourojit Ghosh</a></div>
-      <div class="member-role">Researcher &middot; University of North Carolina at Chapel Hill</div>
-      <div class="member-bio">Assistant Professor in the School of Data and Information Sciences at UNC Chapel Hill and Affiliate Researcher to the Center for Information, Technology and Public Life. His work is on technological bias against historically marginalized populations often overlooked in traditional fairness research.</div>
-    </div>
-    <div class="team-cell">
-      <div class="avatar"><img src="assets/team/Jin-Gao.jpg" alt="Jin Gao" /></div>
-      <div class="member-name">Jin Gao</div>
-      <div class="member-role">Technologist &middot; </div>
-      <div class="member-bio">Designer and technologist whose work sits at the intersection of architecture, urbanism, and computer science. Holds a Master of Science from MIT with experience in full-stack development, AI-driven urban platforms, shared mobility simulation for autonomous vehicles, and award-winning IoT devices for climate monitoring and beehive optimization.</div>
-    </div>
-    <div class="team-cell">
-      <div class="avatar"><img src="assets/team/Andrew-Lawrence.jpg" alt="Andrew Lawrence" /></div>
-      <div class="member-name">Andrew Lawrence</div>
-      <div class="member-role">Technologist &middot; </div>
-      <div class="member-bio">Technical engineer and socio-technical policy researcher whose work centers on differential privacy and ethical AI governance. He has conducted research in AI alignment and pluralism at UConn and algorithmic fairness at UMich. As Director of Tufts AI Safety, he established the AI Policy Fellowship and Hackathon, and serves on the board of the Auster Center Civic Innovation Program.</div>
-    </div>
-    <div class="team-cell">
-      <div class="avatar"><img src="assets/team/saemi-yoon.webp" alt="Saemi Yoon" /></div>
-      <div class="member-name"><a href="https://www.linkedin.com/in/saemiyoon/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--border);">Saemi Yoon</a></div>
-      <div class="member-role">Designer * University of Connecticut</div>
-      <div class="member-bio">UX/Product Designer and MFA candidate at UConn specializing in UX/UI, motion, and interactive media design. With a professional background in product development and strategy, she creates thoughtful, user-centered digital experiences that connect research, design, and emerging technology.</div>
-    </div>
-  </div>
-
-  <div class="deco-divider" aria-hidden="true">
-    <svg viewBox="0 0 1200 24" preserveAspectRatio="none" fill="none">
-      <path d="M0 12 Q30 6 60 12 T120 12 T180 12 T240 12 T300 12 T360 12 T420 12 T480 12 T540 12 T600 12 T660 12 T720 12 T780 12 T840 12 T900 12 T960 12 T1020 12 T1080 12 T1140 12 T1200 12" stroke="var(--blue)" stroke-width="0.5" opacity="0.12"/>
-      <path d="M0 14 Q30 20 60 14 T120 14 T180 14 T240 14 T300 14 T360 14 T420 14 T480 14 T540 14 T600 14 T660 14 T720 14 T780 14 T840 14 T900 14 T960 14 T1020 14 T1080 14 T1140 14 T1200 14" stroke="var(--blue)" stroke-width="0.5" opacity="0.08"/>
-    </svg>
-  </div>
-
-  <div class="cell" id="partners">
-    <div class="section-num">04</div>
-    <div class="section-title">Community Partner</div>
-    <p style="font-weight:300; color:var(--fg-muted); margin-bottom:0; max-width:50rem;">We work alongside community organizations to ground our research in real needs and lived experiences.</p>
-  </div>
-
-  <div class="partner-section">
+  <!-- 02 ======================================================= -->
+  <section class="section" id="projects" aria-labelledby="projects-title">
+    <div class="rail"><span class="rail-num" aria-hidden="true">02</span><span class="label rail-label">Projects</span></div>
     <div>
-      <h3>Tayo / FYLPRO</h3>
-      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" style="margin-top:1rem;" aria-hidden="true">
-        <circle cx="40" cy="40" r="10" stroke="var(--blue)" stroke-width="0.5" opacity="0.25"/>
-        <circle cx="40" cy="40" r="18" stroke="var(--blue)" stroke-width="0.5" opacity="0.2" stroke-dasharray="3 2"/>
-        <circle cx="40" cy="40" r="26" stroke="var(--blue)" stroke-width="0.5" opacity="0.15"/>
-        <circle cx="40" cy="40" r="34" stroke="var(--blue)" stroke-width="0.5" opacity="0.1" stroke-dasharray="5 3"/>
-      </svg>
+      <h2 class="section-title" id="projects-title">Projects</h2>
+      <p class="lede">Our work spans theoretical frameworks, system design, and real-world pilots with underrepresented communities.</p>
+
+      <div class="figures">
+        <figure class="figure-item">
+          <img src="assets/figure1.png" alt="New Persona customization interface" width="2048" height="1229" loading="lazy" />
+          <figcaption><span class="label">Figure 1</span>New Persona customization.</figcaption>
+        </figure>
+        <figure class="figure-item">
+          <img src="assets/figure2.png" alt="Conversational tree diagram showing branching persona perspectives" width="2048" height="1228" loading="lazy" />
+          <figcaption><span class="label">Figure 2</span>The conversational tree diagram allows users to trace and rewind the lineage of ideas between various personas, each embodying a distinct perspective.</figcaption>
+        </figure>
+      </div>
+
+      <article class="project">
+        <div class="project-meta"><span class="badge badge-progress">In progress</span><span class="label" style="color:var(--faint)">Narrative review</span></div>
+        <h3>Beyond the Monolithic Interface: A Research Agenda for Plural Conversational AI</h3>
+        <p>The rapid convergence of artificial intelligence toward conversational chatbot interfaces has made a single interaction paradigm the dominant mode through which hundreds of millions of people engage with AI systems. This narrative review synthesizes research across cognitive science, political studies, AI alignment, game design, and human-computer interaction to identify three interrelated harms produced by the monolithic chatbot interface: cognitive offloading at the level of user thinking, ideological narrowing at the level of user belief, and epistemic compression at the level of cultural and value diversity.</p>
+        <p style="margin-top:1rem">We propose multi-persona interfaces, in which multiple distinct personas are presented to the user simultaneously, as a structural intervention that addresses all three harms at once. We create a design taxonomy for multi-persona interfaces and call for a human-centered research agenda that closes the gap between technical pluralistic alignment methods and empirical studies of users interacting with pluralistic interfaces.</p>
+        <div class="tags">
+          <span class="tag">Cognitive Science</span>
+          <span class="tag">Political Studies</span>
+          <span class="tag">AI Alignment</span>
+          <span class="tag">Game Design</span>
+          <span class="tag">HCI</span>
+        </div>
+        <div class="links">
+          <a href="assets/PAL_OngoingPaper.pdf" target="_blank" rel="noopener noreferrer" class="ext-link">
+            Read ongoing work (PDF)
+            <svg class="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-meta"><span class="badge badge-pilot">Pilot</span><span class="label" style="color:var(--faint)">UConn &times; Tayo / FYLPRO</span></div>
+        <h3>Co&middot;Agents: The Filipino Diaspora Pilot</h3>
+        <p>The Co&middot;Agents project&mdash;a collaboration between researchers at UConn and Tayo/FYLPRO&mdash;develops a multi-agent AI system for cross-cultural cooperation in democratic deliberation. By utilizing culturally calibrated AI agents, Co&middot;Agents enable underrepresented communities to run policy simulations at a fraction of the cost of traditional &ldquo;mini-publics.&rdquo;</p>
+        <p style="margin-top:1rem">The project leverages Tayo&rsquo;s role as a trusted community information hub to ensure AI-driven governance is rooted in the lived experiences of the global Filipino diaspora, and implements the Kierans framework to measure &ldquo;honest friction&rdquo; and misalignment.</p>
+        <div class="links">
+          <a href="https://huggingface.co/spaces/LLM-Plurality/chat" target="_blank" rel="noopener noreferrer" class="ext-link">
+            Try the prototype
+            <svg class="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </article>
     </div>
+  </section>
+
+  <!-- 03 ======================================================= -->
+  <section class="section" id="team" aria-labelledby="team-title">
+    <div class="rail"><span class="rail-num" aria-hidden="true">03</span><span class="label rail-label">Team</span></div>
     <div>
-      <p>Tayo is an innovative data hub and information platform created and maintained by the Filipino Young Leaders Program (FYLPRO), a 501(c)(3) non-profit organization. Established in 2020 by FYLPRO&rsquo;s COVID-19 Task Force, Tayo provides culturally relevant insights, data, and services to help the global Filipino diaspora navigate complex information ecosystems. While its origins were rooted in a virtual help desk for pandemic-related resources, it has expanded into a broader advocacy and research hub addressing public health, legal navigation, and media literacy.</p>
-      <div class="partner-links">
-        <a href="https://www.tayohelp.com/" target="_blank" rel="noopener noreferrer">
-          tayohelp.com
-          <svg class="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </a>
-        <a href="https://fylpro.org/about/" target="_blank" rel="noopener noreferrer">
-          fylpro.org
-          <svg class="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </a>
+      <h2 class="section-title" id="team-title">Team</h2>
+      <p class="lede">Researchers and technologists spanning AI, cognitive science, political theory, and engineering.</p>
+      <div class="cells cells-team">
+
+        <article class="cell member">
+          <div class="member-head">
+            <div class="avatar"><img src="assets/team/thumbs/zhenzhen-qi.jpg" alt="" width="128" height="128" loading="lazy" /></div>
+            <div>
+              <h3 class="member-name"><a href="https://www.zzyw.org/" target="_blank" rel="noopener noreferrer">Dr. Zhenzhen Qi</a></h3>
+              <div class="label member-role">Co-Founder</div>
+              <div class="member-org">University of Connecticut</div>
+            </div>
+          </div>
+          <details class="bio">
+            <summary><span class="label when-closed">Read bio</span><span class="label when-open">Hide bio</span></summary>
+            <p class="cell-body">Artist, Designer, and Assistant Professor in the Department of Digital Media and Design at UConn. Researching software simulation as a mode of collective un-looping and re-making. Her computational art has been curated by the New Museum, Art Basel, Ars Electronica, and Electra, and she has spoken at ELO, CAA, New York Creative Tech Week, and ISCP.</p>
+          </details>
+        </article>
+
+        <article class="cell member">
+          <div class="member-head">
+            <div class="avatar"><img src="assets/team/thumbs/avijit-ghosh.jpg" alt="" width="128" height="128" loading="lazy" /></div>
+            <div>
+              <h3 class="member-name"><a href="https://evijit.io/" target="_blank" rel="noopener noreferrer">Dr. Avijit Ghosh</a></h3>
+              <div class="label member-role">Co-Founder</div>
+              <div class="member-org">University of Connecticut</div>
+            </div>
+          </div>
+          <details class="bio">
+            <summary><span class="label when-closed">Read bio</span><span class="label when-open">Hide bio</span></summary>
+            <p class="cell-body">Lead Technical AI Policy Researcher at Hugging Face and Research Affiliate at UConn. He leads the EvalEval Coalition, a multi-stakeholder initiative for rigor in AI evaluations. His work spans algorithmic bias, agent autonomy, and vulnerability disclosure, and has been covered in The New York Times, Forbes, The Guardian, and Wired. His research has shaped AI regulation including in New York City.</p>
+          </details>
+        </article>
+
+        <article class="cell member">
+          <div class="member-head">
+            <div class="avatar"><img src="assets/team/thumbs/afifah-kashif.jpg" alt="" width="128" height="128" loading="lazy" /></div>
+            <div>
+              <h3 class="member-name"><a href="https://afifahk.github.io/" target="_blank" rel="noopener noreferrer">Afifah Kashif</a></h3>
+              <div class="label member-role">Researcher</div>
+              <div class="member-org">University of Cambridge</div>
+            </div>
+          </div>
+          <details class="bio">
+            <summary><span class="label when-closed">Read bio</span><span class="label when-open">Hide bio</span></summary>
+            <p class="cell-body">MPhil candidate in Human-Inspired AI at the University of Cambridge, where she focuses on developing methods for evaluating and mitigating bias in LLM-powered social robots. She previously studied computer science and law at the University of Washington, founded a digital literacy program for marginalized learners, and has worked to bridge design, engineering and governance in robotics and AI.</p>
+          </details>
+        </article>
+
+        <article class="cell member">
+          <div class="member-head">
+            <div class="avatar"><img src="assets/team/thumbs/isabelle-kohout.jpg" alt="" width="128" height="128" loading="lazy" /></div>
+            <div>
+              <h3 class="member-name">Isabelle Kohout</h3>
+              <div class="label member-role">Researcher</div>
+              <div class="member-org">University of Cambridge</div>
+            </div>
+          </div>
+          <details class="bio">
+            <summary><span class="label when-closed">Read bio</span><span class="label when-open">Hide bio</span></summary>
+            <p class="cell-body">MPhil candidate in Human-Inspired AI at the University of Cambridge. Previously a Senior Product Manager at Atlassian building AI systems used by hundreds of thousands globally, and co-leading their responsible AI governance program. Her research investigates how AI shapes individual beliefs and how those beliefs transmit to naive third parties, with implications for epistemic autonomy and democratic resilience.</p>
+          </details>
+        </article>
+
+        <article class="cell member">
+          <div class="member-head">
+            <div class="avatar"><img src="assets/team/thumbs/sourojit-ghosh.jpg" alt="" width="128" height="128" loading="lazy" /></div>
+            <div>
+              <h3 class="member-name"><a href="https://sourojitghosh.github.io/" target="_blank" rel="noopener noreferrer">Dr. Sourojit Ghosh</a></h3>
+              <div class="label member-role">Researcher</div>
+              <div class="member-org">University of North Carolina at Chapel Hill</div>
+            </div>
+          </div>
+          <details class="bio">
+            <summary><span class="label when-closed">Read bio</span><span class="label when-open">Hide bio</span></summary>
+            <p class="cell-body">Assistant Professor in the School of Data and Information Sciences at UNC Chapel Hill and Affiliate Researcher to the Center for Information, Technology and Public Life. His work is on technological bias against historically marginalized populations often overlooked in traditional fairness research.</p>
+          </details>
+        </article>
+
+        <article class="cell member">
+          <div class="member-head">
+            <div class="avatar"><img src="assets/team/thumbs/jin-gao.jpg" alt="" width="128" height="128" loading="lazy" /></div>
+            <div>
+              <h3 class="member-name">Jin Gao</h3>
+              <div class="label member-role">Technologist</div>
+            </div>
+          </div>
+          <details class="bio">
+            <summary><span class="label when-closed">Read bio</span><span class="label when-open">Hide bio</span></summary>
+            <p class="cell-body">Designer and technologist whose work sits at the intersection of architecture, urbanism, and computer science. Holds a Master of Science from MIT with experience in full-stack development, AI-driven urban platforms, shared mobility simulation for autonomous vehicles, and award-winning IoT devices for climate monitoring and beehive optimization.</p>
+          </details>
+        </article>
+
+        <article class="cell member">
+          <div class="member-head">
+            <div class="avatar"><img src="assets/team/thumbs/andrew-lawrence.jpg" alt="" width="128" height="128" loading="lazy" /></div>
+            <div>
+              <h3 class="member-name">Andrew Lawrence</h3>
+              <div class="label member-role">Technologist</div>
+            </div>
+          </div>
+          <details class="bio">
+            <summary><span class="label when-closed">Read bio</span><span class="label when-open">Hide bio</span></summary>
+            <p class="cell-body">Technical engineer and socio-technical policy researcher whose work centers on differential privacy and ethical AI governance. He has conducted research in AI alignment and pluralism at UConn and algorithmic fairness at UMich. As Director of Tufts AI Safety, he established the AI Policy Fellowship and Hackathon, and serves on the board of the Auster Center Civic Innovation Program.</p>
+          </details>
+        </article>
+
+        <article class="cell member">
+          <div class="member-head">
+            <div class="avatar"><img src="assets/team/thumbs/saemi-yoon.jpg" alt="" width="128" height="128" loading="lazy" /></div>
+            <div>
+              <h3 class="member-name"><a href="https://www.linkedin.com/in/saemiyoon/" target="_blank" rel="noopener noreferrer">Saemi Yoon</a></h3>
+              <div class="label member-role">Designer</div>
+              <div class="member-org">University of Connecticut</div>
+            </div>
+          </div>
+          <details class="bio">
+            <summary><span class="label when-closed">Read bio</span><span class="label when-open">Hide bio</span></summary>
+            <p class="cell-body">UX/Product Designer and MFA candidate at UConn specializing in UX/UI, motion, and interactive media design. With a professional background in product development and strategy, she creates thoughtful, user-centered digital experiences that connect research, design, and emerging technology.</p>
+          </details>
+        </article>
+
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="deco-divider" aria-hidden="true">
-    <svg viewBox="0 0 1200 24" preserveAspectRatio="none" fill="none">
-      <path d="M0 12 Q50 4 100 12 T200 12 T300 12 T400 12 T500 12 T600 12 T700 12 T800 12 T900 12 T1000 12 T1100 12 T1200 12" stroke="var(--blue)" stroke-width="0.5" opacity="0.12"/>
-      <path d="M0 12 Q50 20 100 12 T200 12 T300 12 T400 12 T500 12 T600 12 T700 12 T800 12 T900 12 T1000 12 T1100 12 T1200 12" stroke="var(--blue)" stroke-width="0.5" opacity="0.08"/>
-    </svg>
-  </div>
+  <!-- 04 ======================================================= -->
+  <section class="section" id="partners" aria-labelledby="partners-title">
+    <div class="rail"><span class="rail-num" aria-hidden="true">04</span><span class="label rail-label">Partners</span></div>
+    <div>
+      <h2 class="section-title" id="partners-title">Community Partner</h2>
+      <p class="lede">We work alongside community organizations to ground our research in real needs and lived experiences.</p>
+      <div class="partner">
+        <div>
+          <h3>Tayo / FYLPRO</h3>
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+            <circle cx="40" cy="40" r="10" stroke="#013ECD" stroke-width="0.6" opacity="0.35"/>
+            <circle cx="40" cy="40" r="18" stroke="#013ECD" stroke-width="0.6" opacity="0.28" stroke-dasharray="3 2"/>
+            <circle cx="40" cy="40" r="26" stroke="#013ECD" stroke-width="0.6" opacity="0.2"/>
+            <circle cx="40" cy="40" r="34" stroke="#013ECD" stroke-width="0.6" opacity="0.14" stroke-dasharray="5 3"/>
+          </svg>
+        </div>
+        <div class="prose">
+          <p>Tayo is an innovative data hub and information platform created and maintained by the Filipino Young Leaders Program (FYLPRO), a 501(c)(3) non-profit organization. Established in 2020 by FYLPRO&rsquo;s COVID-19 Task Force, Tayo provides culturally relevant insights, data, and services to help the global Filipino diaspora navigate complex information ecosystems.</p>
+          <p>While its origins were rooted in a virtual help desk for pandemic-related resources, it has expanded into a broader advocacy and research hub addressing public health, legal navigation, and media literacy.</p>
+          <div class="links">
+            <a class="ext-link" href="https://www.tayohelp.com/" target="_blank" rel="noopener noreferrer">
+              tayohelp.com
+              <svg class="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+            <a class="ext-link" href="https://fylpro.org/about/" target="_blank" rel="noopener noreferrer">
+              fylpro.org
+              <svg class="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <div class="cell" id="acknowledgements">
-    <div class="section-num">05</div>
-    <div class="section-title">Acknowledgements</div>
-  </div>
-
-  <div class="ack-section">
-    <p>This project has received the generous support of the University of Connecticut Humanities Institute, the School of Fine Arts Research Grant, and the Office of the Vice President for Research in helping to make this project possible.</p>
-  </div>
+  <!-- 05 ======================================================= -->
+  <section class="section" id="acknowledgements" aria-labelledby="ack-title">
+    <div class="rail"><span class="rail-num" aria-hidden="true">05</span><span class="label rail-label">Support</span></div>
+    <div>
+      <h2 class="section-title" id="ack-title">Acknowledgements</h2>
+      <div class="prose">
+        <p>This project has received the generous support of the University of Connecticut Humanities Institute, the School of Fine Arts Research Grant, and the Office of the Vice President for Research in helping to make this project possible.</p>
+      </div>
+    </div>
+  </section>
 
 </div>
+</main>
 
 <footer>
-  <div class="footer-bottom">
-    <span>&copy; Updated May 2026 - Pluralistic AI Lab</span>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="assets/pal-mark.svg" alt="" width="40" height="40" />
+        <div><strong>PAL</strong><span>Pluralistic AI Lab &mdash; reimagining AI interfaces beyond the monolithic chatbot.</span></div>
+      </div>
+      <div class="footer-links">
+        <a class="ext-link" href="https://huggingface.co/spaces/LLM-Plurality/chat" target="_blank" rel="noopener noreferrer">Prototype</a>
+        <a class="ext-link" href="assets/PAL_OngoingPaper.pdf" target="_blank" rel="noopener noreferrer">Paper (PDF)</a>
+        <a class="ext-link" href="https://github.com/pluralistic-ai/lab" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 Pluralistic AI Lab &middot; Updated October 2026</div>
   </div>
 </footer>
 
 <script>
-  function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
-  function closeMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+  var menuBtn = document.querySelector('.menu-btn');
+  function toggleMenu() {
+    var open = document.getElementById('mobileMenu').classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open);
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  // Highlight the nav link for the section in view.
+  (function() {
+    if (!('IntersectionObserver' in window)) return;
+    var links = {};
+    document.querySelectorAll('.nav-links a[href^="#"]').forEach(function(a) { links[a.getAttribute('href').slice(1)] = a; });
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (!e.isIntersecting || !links[e.target.id]) return;
+        Object.keys(links).forEach(function(k) { links[k].removeAttribute('aria-current'); });
+        links[e.target.id].setAttribute('aria-current', 'true');
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    document.querySelectorAll('section[id]').forEach(function(s) { io.observe(s); });
+  })();
 
   // Subtle parallax on hero topo SVG
   (function() {
     var topo = document.getElementById('heroTopo');
-    if (!topo) return;
+    if (!topo || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var ticking = false;
     window.addEventListener('scroll', function() {
       if (!ticking) {
         requestAnimationFrame(function() {
           var y = window.scrollY * 0.04;
-          topo.style.transform = 'translateY(calc(-50% + ' + y + 'px))';
+          topo.style.transform = 'translateY(calc(-46% + ' + y + 'px))';
           ticking = false;
         });
         ticking = true;
