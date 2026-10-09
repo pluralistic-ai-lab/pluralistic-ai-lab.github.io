@@ -155,6 +155,8 @@
     .member-role { color: var(--blue); margin-top: 0.25rem; font-size: 0.6875rem; }
     .member-org { font-size: 0.8125rem; color: var(--faint); line-height: 1.4; margin-top: 0.125rem; }
     .cells-team { align-items: start; }
+    /* Founders and faculty get the first row to themselves; everyone else starts on the next. */
+    .member.lead + .member:not(.lead) { grid-column-start: 1; }
     .member { padding-bottom: 1.5rem; }
     .member .cell-body { position: relative; z-index: 1; padding-top: 0.75rem; }
     .bio summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; color: var(--blue); padding: 0.375rem 0; position: relative; z-index: 1; }
@@ -370,7 +372,7 @@
       <p class="lede">Researchers and technologists spanning AI, cognitive science, political theory, and engineering.</p>
       <div class="cells cells-team">
 
-        <article class="cell member">
+        <article class="cell member lead">
           <div class="member-head">
             <div class="avatar"><img src="assets/team/thumbs/zhenzhen-qi.jpg" alt="" width="128" height="128" loading="lazy" /></div>
             <div>
@@ -385,7 +387,7 @@
           </details>
         </article>
 
-        <article class="cell member">
+        <article class="cell member lead">
           <div class="member-head">
             <div class="avatar"><img src="assets/team/thumbs/avijit-ghosh.jpg" alt="" width="128" height="128" loading="lazy" /></div>
             <div>
@@ -397,6 +399,21 @@
           <details class="bio">
             <summary><span class="label when-closed">Read bio</span><span class="label when-open">Hide bio</span></summary>
             <p class="cell-body">Lead Technical AI Policy Researcher at Hugging Face and Research Affiliate at UConn. He leads the EvalEval Coalition, a multi-stakeholder initiative for rigor in AI evaluations. His work spans algorithmic bias, agent autonomy, and vulnerability disclosure, and has been covered in The New York Times, Forbes, The Guardian, and Wired. His research has shaped AI regulation including in New York City.</p>
+          </details>
+        </article>
+
+        <article class="cell member lead">
+          <div class="member-head">
+            <div class="avatar"><img src="assets/team/thumbs/sourojit-ghosh.jpg" alt="" width="128" height="128" loading="lazy" /></div>
+            <div>
+              <h3 class="member-name"><a href="https://sourojitghosh.github.io/" target="_blank" rel="noopener noreferrer">Dr. Sourojit Ghosh</a></h3>
+              <div class="label member-role">Faculty Collaborator</div>
+              <div class="member-org">University of North Carolina at Chapel Hill</div>
+            </div>
+          </div>
+          <details class="bio">
+            <summary><span class="label when-closed">Read bio</span><span class="label when-open">Hide bio</span></summary>
+            <p class="cell-body">Assistant Professor in the School of Data and Information Sciences at UNC Chapel Hill and Affiliate Researcher to the Center for Information, Technology and Public Life. His work is on technological bias against historically marginalized populations often overlooked in traditional fairness research.</p>
           </details>
         </article>
 
@@ -427,21 +444,6 @@
           <details class="bio">
             <summary><span class="label when-closed">Read bio</span><span class="label when-open">Hide bio</span></summary>
             <p class="cell-body">MPhil candidate in Human-Inspired AI at the University of Cambridge. Previously a Senior Product Manager at Atlassian building AI systems used by hundreds of thousands globally, and co-leading their responsible AI governance program. Her research investigates how AI shapes individual beliefs and how those beliefs transmit to naive third parties, with implications for epistemic autonomy and democratic resilience.</p>
-          </details>
-        </article>
-
-        <article class="cell member">
-          <div class="member-head">
-            <div class="avatar"><img src="assets/team/thumbs/sourojit-ghosh.jpg" alt="" width="128" height="128" loading="lazy" /></div>
-            <div>
-              <h3 class="member-name"><a href="https://sourojitghosh.github.io/" target="_blank" rel="noopener noreferrer">Dr. Sourojit Ghosh</a></h3>
-              <div class="label member-role">Researcher</div>
-              <div class="member-org">University of North Carolina at Chapel Hill</div>
-            </div>
-          </div>
-          <details class="bio">
-            <summary><span class="label when-closed">Read bio</span><span class="label when-open">Hide bio</span></summary>
-            <p class="cell-body">Assistant Professor in the School of Data and Information Sciences at UNC Chapel Hill and Affiliate Researcher to the Center for Information, Technology and Public Life. His work is on technological bias against historically marginalized populations often overlooked in traditional fairness research.</p>
           </details>
         </article>
 
