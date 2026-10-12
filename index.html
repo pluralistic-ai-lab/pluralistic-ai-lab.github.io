@@ -167,7 +167,19 @@
     .bio .when-open, .bio[open] .when-closed { display: none; }
     .bio[open] .when-open { display: inline; }
 
+    /* ---------------- publications ---------------- */
+    .pubs { list-style: none; }
+    .pub { border-top: 1px solid var(--rule); padding: 1.75rem 0 2.25rem; }
+    .pub h3 { font-family: var(--display); font-size: clamp(1.25rem, 2.2vw, 1.5rem); font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; color: var(--ink); max-width: 40ch; margin-bottom: 0.625rem; }
+    .pub h3 a { border-bottom: 1px solid var(--rule); transition: border-color .2s, color .2s; }
+    .pub h3 a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+    .pub-authors { color: var(--text); max-width: var(--measure); }
+    .pub-abstract { max-width: var(--measure); margin-top: 1.25rem; font-size: 0.96875rem; color: var(--muted); }
+    .pub-abstract .label { display: block; color: var(--ink); margin-bottom: 0.375rem; }
+
     /* ---------------- partner, acknowledgements ---------------- */
+    .ack-partner { margin-top: 2.5rem; }
+    .ack-partner .label { display: block; margin-bottom: 0.5rem; }
     .partner { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 2.5rem; border-top: 1px solid var(--rule); padding-top: 1.75rem; }
     .partner h3 { font-family: var(--display); font-size: 1.375rem; font-weight: 700; color: var(--ink); line-height: 1.2; }
     .partner svg { margin-top: 1.25rem; }
@@ -202,8 +214,8 @@
     <div class="nav-links">
       <a href="#research">Research</a>
       <a href="#projects">Projects</a>
+      <a href="#publications">Publications</a>
       <a href="#team">Team</a>
-      <a href="#partners">Partners</a>
       <a href="#acknowledgements">Acknowledgements</a>
       <button class="menu-btn" onclick="toggleMenu()" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -213,8 +225,8 @@
   <div class="mobile-menu" id="mobileMenu">
     <a href="#research" onclick="closeMenu()">Research</a>
     <a href="#projects" onclick="closeMenu()">Projects</a>
+    <a href="#publications" onclick="closeMenu()">Publications</a>
     <a href="#team" onclick="closeMenu()">Team</a>
-    <a href="#partners" onclick="closeMenu()">Partners</a>
     <a href="#acknowledgements" onclick="closeMenu()">Acknowledgements</a>
   </div>
 </nav>
@@ -330,26 +342,6 @@
       </div>
 
       <article class="project">
-        <div class="project-meta"><span class="badge badge-progress">In progress</span><span class="label" style="color:var(--faint)">Narrative review</span></div>
-        <h3>Beyond the Monolithic Interface: A Research Agenda for Plural Conversational AI</h3>
-        <p>The rapid convergence of artificial intelligence toward conversational chatbot interfaces has made a single interaction paradigm the dominant mode through which hundreds of millions of people engage with AI systems. This narrative review synthesizes research across cognitive science, political studies, AI alignment, game design, and human-computer interaction to identify three interrelated harms produced by the monolithic chatbot interface: cognitive offloading at the level of user thinking, ideological narrowing at the level of user belief, and epistemic compression at the level of cultural and value diversity.</p>
-        <p style="margin-top:1rem">We propose multi-persona interfaces, in which multiple distinct personas are presented to the user simultaneously, as a structural intervention that addresses all three harms at once. We create a design taxonomy for multi-persona interfaces and call for a human-centered research agenda that closes the gap between technical pluralistic alignment methods and empirical studies of users interacting with pluralistic interfaces.</p>
-        <div class="tags">
-          <span class="tag">Cognitive Science</span>
-          <span class="tag">Political Studies</span>
-          <span class="tag">AI Alignment</span>
-          <span class="tag">Game Design</span>
-          <span class="tag">HCI</span>
-        </div>
-        <div class="links">
-          <a href="https://arxiv.org/pdf/2610.12878" target="_blank" rel="noopener noreferrer" class="ext-link">
-            Read the paper (arXiv)
-            <svg class="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          </a>
-        </div>
-      </article>
-
-      <article class="project">
         <div class="project-meta"><span class="badge badge-pilot">Pilot</span><span class="label" style="color:var(--faint)">UConn &times; Tayo / FYLPRO</span></div>
         <h3>Co&middot;Agents: The Filipino Diaspora Pilot</h3>
         <p>The Co&middot;Agents project&mdash;a collaboration between researchers at UConn and Tayo/FYLPRO&mdash;develops a multi-agent AI system for cross-cultural cooperation in democratic deliberation. By utilizing culturally calibrated AI agents, Co&middot;Agents enable underrepresented communities to run policy simulations at a fraction of the cost of traditional &ldquo;mini-publics.&rdquo;</p>
@@ -365,8 +357,37 @@
   </section>
 
   <!-- 03 ======================================================= -->
+  <section class="section" id="publications" aria-labelledby="publications-title">
+    <div class="rail"><span class="rail-num" aria-hidden="true">03</span><span class="label rail-label">Publications</span></div>
+    <div>
+      <h2 class="section-title" id="publications-title">Publications</h2>
+      <ol class="pubs">
+        <li class="pub">
+          <div class="project-meta"><span class="badge badge-progress">Preprint</span><span class="label" style="color:var(--faint)">2026</span></div>
+          <h3><a href="https://arxiv.org/abs/2610.12878" target="_blank" rel="noopener noreferrer">Beyond the Monolithic Interface: A Research Agenda for Plural Conversational AI</a></h3>
+          <p class="pub-authors">Avijit Ghosh, Afifah Kashif, Isabelle Kohout, Zhenzhen Qi</p>
+          <p class="pub-abstract"><span class="label">Abstract</span>The current paradigm of artificial intelligence (AI) design elevates conversational chatbot interfaces, making them the default mode through which hundreds of millions of people interact with AI systems globally. This narrative review identifies three related harms produced by the single-voice chatbot interface, drawing on insights from literature in cognitive science, political studies, AI alignment, game design and human computer interaction. Firstly, cognitive offloading of user thinking, secondly, ideological narrowing of user beliefs, and thirdly, epistemic compression of cultural and value diversity. We then propose multi-persona interfaces, in which multiple personas are presented to the user simultaneously, as a cost-effective intervention that addresses all three harms at once. We ground this intervention in traditions the AI literature has largely overlooked, drawing on techniques from game design and participatory simulation, including the magic circle, role differentiation, and persona embodiment. We propose a taxonomy for the future design of multi-persona interfaces, and call for a research agenda that closes the gap between technical pluralistic alignment methods and empirical studies of human-AI interactions with pluralistic interfaces.</p>
+          <div class="tags">
+            <span class="tag">Cognitive Science</span>
+            <span class="tag">Political Studies</span>
+            <span class="tag">AI Alignment</span>
+            <span class="tag">Game Design</span>
+            <span class="tag">HCI</span>
+          </div>
+          <div class="links">
+            <a class="ext-link" href="https://arxiv.org/abs/2610.12878" target="_blank" rel="noopener noreferrer">
+              arXiv
+              <svg class="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 04 ======================================================= -->
   <section class="section" id="team" aria-labelledby="team-title">
-    <div class="rail"><span class="rail-num" aria-hidden="true">03</span><span class="label rail-label">Team</span></div>
+    <div class="rail"><span class="rail-num" aria-hidden="true">04</span><span class="label rail-label">Team</span></div>
     <div>
       <h2 class="section-title" id="team-title">Team</h2>
       <p class="lede">Researchers and technologists spanning AI, cognitive science, political theory, and engineering.</p>
@@ -494,14 +515,18 @@
     </div>
   </section>
 
-  <!-- 04 ======================================================= -->
-  <section class="section" id="partners" aria-labelledby="partners-title">
-    <div class="rail"><span class="rail-num" aria-hidden="true">04</span><span class="label rail-label">Partners</span></div>
+  <!-- 05 ======================================================= -->
+  <section class="section" id="acknowledgements" aria-labelledby="ack-title">
+    <div class="rail"><span class="rail-num" aria-hidden="true">05</span><span class="label rail-label">Support</span></div>
     <div>
-      <h2 class="section-title" id="partners-title">Community Partner</h2>
-      <p class="lede">We work alongside community organizations to ground our research in real needs and lived experiences.</p>
-      <div class="partner">
+      <h2 class="section-title" id="ack-title">Acknowledgements</h2>
+      <div class="prose">
+        <p>This project has received the generous support of the University of Connecticut Humanities Institute, the School of Fine Arts Research Grant, and the Office of the Vice President for Research in helping to make this project possible.</p>
+        <p>We also work alongside community organizations to ground our research in real needs and lived experiences, and are grateful to our community partner, Tayo / FYLPRO.</p>
+      </div>
+      <div class="partner ack-partner">
         <div>
+          <span class="label rail-label">Community partner</span>
           <h3>Tayo / FYLPRO</h3>
           <svg width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden="true">
             <circle cx="40" cy="40" r="10" stroke="#013ECD" stroke-width="0.6" opacity="0.35"/>
@@ -524,17 +549,6 @@
             </a>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 05 ======================================================= -->
-  <section class="section" id="acknowledgements" aria-labelledby="ack-title">
-    <div class="rail"><span class="rail-num" aria-hidden="true">05</span><span class="label rail-label">Support</span></div>
-    <div>
-      <h2 class="section-title" id="ack-title">Acknowledgements</h2>
-      <div class="prose">
-        <p>This project has received the generous support of the University of Connecticut Humanities Institute, the School of Fine Arts Research Grant, and the Office of the Vice President for Research in helping to make this project possible.</p>
       </div>
     </div>
   </section>
