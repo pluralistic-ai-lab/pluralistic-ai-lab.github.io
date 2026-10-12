@@ -201,14 +201,15 @@
     /* ---------------- footer ---------------- */
     footer { border-top: 1px solid var(--ink); }
     /* Two lockups that mirror each other: a 44px logo row, then a caption. */
-    .footer-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem 3rem; align-items: start; padding: 2.75rem 0 2.25rem; }
+    .footer-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem 3rem; align-items: start; padding: 2.75rem 0; }
     .footer-logo { display: flex; align-items: center; gap: 0.75rem; height: 2.75rem; }
     .footer-logo img { width: auto; height: 2.75rem; }
     .footer-logo strong { font-family: var(--display); font-size: 1rem; font-weight: 700; letter-spacing: 0.15em; color: var(--ink); }
     .footer-logo .sub { font-family: var(--display); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); padding-left: 0.75rem; border-left: 1px solid var(--rule); }
-    .footer-caption { font-size: 0.625rem; color: var(--faint); margin-top: 0.875rem; }
-    .footer-caption a { border-bottom: 1px solid var(--rule); transition: color .2s, border-color .2s; }
-    .footer-caption a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+    /* Both halves carry three lines here, so the columns end level. */
+    .footer-list { list-style: none; font-size: 0.625rem; line-height: 2.1; color: var(--faint); margin-top: 0.875rem; }
+    .footer-list a { border-bottom: 1px solid var(--rule); transition: color .2s, border-color .2s; }
+    .footer-list a:hover { color: var(--blue); border-bottom-color: var(--blue); }
     .footer-uconn { text-align: right; }
     .footer-uconn .footer-logo { justify-content: flex-end; }
     /* The wordmark is solid and fills its box; the PAL ring is light and inset, so shrink UConn to match optically. */
@@ -218,7 +219,6 @@
       .footer-uconn { text-align: left; padding-top: 2rem; border-top: 1px solid var(--rule); }
       .footer-uconn .footer-logo { justify-content: flex-start; }
     }
-    .footer-bottom { border-top: 1px solid var(--rule); padding: 1rem 0 1.5rem; font-size: 0.8125rem; color: var(--faint); }
 
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
   </style>
@@ -262,7 +262,7 @@
     <p class="label hero-kicker"><a class="hero-uconn" href="https://uconn.edu/" target="_blank" rel="noopener noreferrer"><img src="assets/uconn-oak-leaf.png" alt="" width="34" height="36" />University of Connecticut</a><span aria-hidden="true">&middot;</span>Collaborative research initiative</p>
     <h1 class="hero-title">Pluralistic<br/>AI Lab</h1>
     <p class="hero-subtitle">Reimagining AI interfaces.</p>
-    <p class="hero-mission">The PAL (Pluralistic AI Lab) is a collaborative research initiative at the University of Connecticut, an interdisciplinary effort between the Connecticut Advanced Computing Center (CACC) and the Department of Digital Media and Design (DMD). It is led by a cross-disciplinary team of artists, designers, technologists, researchers and grassroot organization leaders. The lab&rsquo;s mission focuses on reimagining AI interfaces and architectures to move beyond &ldquo;monolithic&rdquo; single-person chatbots.</p>
+    <p class="hero-mission">The PAL (Pluralistic AI Lab) is a collaborative research initiative at the University of Connecticut, an interdisciplinary effort among the Connecticut Advanced Computing Center (CACC), the Department of Digital Media and Design (DMD), and the UConn Humanities Institute (UCHI). It is led by a cross-disciplinary team of artists, designers, technologists, researchers and grassroot organization leaders. The lab&rsquo;s mission focuses on reimagining AI interfaces and architectures to move beyond &ldquo;monolithic&rdquo; single-person chatbots.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="#projects">See our projects</a>
       <a class="btn" href="https://huggingface.co/spaces/LLM-Plurality/chat" target="_blank" rel="noopener noreferrer">Try the prototype
@@ -545,7 +545,7 @@
     <div>
       <h2 class="section-title" id="ack-title">Acknowledgements</h2>
       <div class="prose">
-        <p>This project has received the generous support of the University of Connecticut Humanities Institute, the School of Fine Arts Research Grant, and the Office of the Vice President for Research in helping to make this project possible.</p>
+        <p>This project has received the generous support of the <a href="https://humanities.uconn.edu/" target="_blank" rel="noopener noreferrer">University of Connecticut Humanities Institute</a>, the School of Fine Arts Research Grant, and the Office of the Vice President for Research in helping to make this project possible.</p>
         <p>We also work alongside community organizations to ground our research in real needs and lived experiences, and are grateful to our community partner, <a href="https://www.tayohelp.com/" target="_blank" rel="noopener noreferrer">Tayo</a> / <a href="https://fylpro.org/about/" target="_blank" rel="noopener noreferrer">FYLPRO</a>.</p>
       </div>
     </div>
@@ -563,14 +563,21 @@
           <strong>PAL</strong>
           <span class="sub">Pluralistic AI Lab</span>
         </a>
-        <p class="label footer-caption">Reimagining AI interfaces</p>
+        <ul class="label footer-list">
+          <li>Reimagining AI interfaces</li>
+          <li>&copy; 2026</li>
+          <li>Updated October 2026</li>
+        </ul>
       </div>
       <div class="footer-uconn">
         <a class="footer-logo" href="https://uconn.edu/" target="_blank" rel="noopener noreferrer"><img src="assets/uconn-wordmark.svg" alt="University of Connecticut" width="121" height="36" /></a>
-        <p class="label footer-caption"><a href="https://cacc.engr.uconn.edu/" target="_blank" rel="noopener noreferrer">Connecticut Advanced Computing Center</a> &times; <a href="https://dmd.uconn.edu/" target="_blank" rel="noopener noreferrer">Digital Media &amp; Design</a></p>
+        <ul class="label footer-list">
+          <li><a href="https://cacc.engr.uconn.edu/" target="_blank" rel="noopener noreferrer">Connecticut Advanced Computing Center</a></li>
+          <li><a href="https://dmd.uconn.edu/" target="_blank" rel="noopener noreferrer">Digital Media &amp; Design</a></li>
+          <li><a href="https://humanities.uconn.edu/" target="_blank" rel="noopener noreferrer">Humanities Institute</a></li>
+        </ul>
       </div>
     </div>
-    <div class="footer-bottom">&copy; 2026 Pluralistic AI Lab &middot; University of Connecticut &middot; Updated October 2026</div>
   </div>
 </footer>
 
